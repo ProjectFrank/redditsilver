@@ -17,60 +17,85 @@ img {
 
 /* line 18, /Users/frankwang/src/redditsilver/source/css/style.scss */
 a {
-  color: inherit;
-  text-decoration: none; }
-  /* line 21, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  color: #999;
+  text-decoration: none;
+  cursor: pointer; }
+  /* line 22, /Users/frankwang/src/redditsilver/source/css/style.scss */
   a:active {
-    color: #00f; }
-  /* line 24, /Users/frankwang/src/redditsilver/source/css/style.scss */
+    color: #ff3c1f; }
+  /* line 25, /Users/frankwang/src/redditsilver/source/css/style.scss */
   a:hover {
-    color: #00f; }
+    color: #ff3c1f; }
 
-/* line 29, /Users/frankwang/src/redditsilver/source/css/style.scss */
+/* line 30, /Users/frankwang/src/redditsilver/source/css/style.scss */
 h2 {
   font-size: 3rem; }
 
-/* line 33, /Users/frankwang/src/redditsilver/source/css/style.scss */
+/* line 34, /Users/frankwang/src/redditsilver/source/css/style.scss */
 header {
   text-align: center;
   margin-bottom: 15rem; }
-  /* line 36, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  /* line 37, /Users/frankwang/src/redditsilver/source/css/style.scss */
   header p {
     font-size: 2rem; }
 
-/* line 41, /Users/frankwang/src/redditsilver/source/css/style.scss */
+/* line 42, /Users/frankwang/src/redditsilver/source/css/style.scss */
 .postbox {
   margin: 0 auto;
   width: 100%;
   max-width: 600px; }
 
-/* line 47, /Users/frankwang/src/redditsilver/source/css/style.scss */
+/* line 48, /Users/frankwang/src/redditsilver/source/css/style.scss */
 .post {
   padding-bottom: 50px;
   margin-bottom: 50px;
   border-bottom: 1px solid black;
   font-size: 1.6rem; }
-  /* line 52, /Users/frankwang/src/redditsilver/source/css/style.scss */
-  .post img {
-    width: 100%; }
+  /* line 53, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  .post img, .post video {
+    width: 100%;
+    margin-bottom: 1rem; }
 
-/* line 57, /Users/frankwang/src/redditsilver/source/css/style.scss */
+/* line 59, /Users/frankwang/src/redditsilver/source/css/style.scss */
+.loader {
+  display: inline; }
+  /* line 61, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  .loader svg {
+    position: relative;
+    top: 0.2rem;
+    height: 1.6rem; }
+    /* line 65, /Users/frankwang/src/redditsilver/source/css/style.scss */
+    .loader svg path {
+      fill: #ff3c1f; }
+
+/* line 71, /Users/frankwang/src/redditsilver/source/css/style.scss */
 .commentbox {
   overflow: hidden; }
 
-/* line 61, /Users/frankwang/src/redditsilver/source/css/style.scss */
+/* line 75, /Users/frankwang/src/redditsilver/source/css/style.scss */
 .comment {
-  margin: 1em 0; }
-  /* line 63, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  position: relative;
+  margin: 1em 0;
+  padding-bottom: 1rem; }
+  /* line 79, /Users/frankwang/src/redditsilver/source/css/style.scss */
   .comment .author {
     float: left;
     margin-right: 2em; }
-  /* line 67, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  /* line 83, /Users/frankwang/src/redditsilver/source/css/style.scss */
   .comment .votes {
     float: left; }
-  /* line 70, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  /* line 86, /Users/frankwang/src/redditsilver/source/css/style.scss */
   .comment .hours {
     float: right; }
-  /* line 73, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  /* line 89, /Users/frankwang/src/redditsilver/source/css/style.scss */
   .comment div {
-    clear: both; }
+    clear: both;
+    padding-top: 1rem; }
+    /* line 92, /Users/frankwang/src/redditsilver/source/css/style.scss */
+    .comment div p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      line-height: 1.4; }
+    /* line 97, /Users/frankwang/src/redditsilver/source/css/style.scss */
+    .comment div a {
+      text-decoration: underline; }
