@@ -53,3 +53,24 @@ header {
   /* line 52, /Users/frankwang/src/redditsilver/source/css/style.scss */
   .post img {
     width: 100%; }
+
+/* line 57, /Users/frankwang/src/redditsilver/source/css/style.scss */
+.commentbox {
+  overflow: hidden; }
+
+/* line 61, /Users/frankwang/src/redditsilver/source/css/style.scss */
+.comment {
+  margin: 1em 0; }
+  /* line 63, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  .comment .author {
+    float: left;
+    margin-right: 2em; }
+  /* line 67, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  .comment .votes {
+    float: left; }
+  /* line 70, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  .comment .hours {
+    float: right; }
+  /* line 73, /Users/frankwang/src/redditsilver/source/css/style.scss */
+  .comment div {
+    clear: both; }
