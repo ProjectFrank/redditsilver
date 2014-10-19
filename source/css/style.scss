@@ -53,3 +53,24 @@ header {
 	width: 100%;
     }
 }
+
+.commentbox {
+    overflow: hidden;
+}
+
+.comment {
+    margin: 1em 0;
+    .author {
+	float: left;
+	margin-right: 2em;
+    }
+    .votes {
+	float: left;
+    }
+    .hours {
+	float: right;
+    }
+    div {
+	clear: both;
+    }
+}
