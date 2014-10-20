@@ -24832,7 +24832,7 @@ if (!(window.console && console.log)) {
 	loadPosts: function() {
 	    ajaxActive = true;
 	    $.ajax({
-		url: 'http://www.reddit.com/.json?jsonp=?',
+		url: 'http://www.reddit.com/user/redditsilverwebapp/m/redditsilver/.json?jsonp=?',
 		type: 'GET',
 		dataType: 'jsonp',
 		data: this.requestParams,
@@ -24855,6 +24855,7 @@ if (!(window.console && console.log)) {
 		}.bind(this)
 	    });
 	},
+	$deferred: null,	
 	componentDidMount: function() {
 	    this.loadPosts();
 	    var lastScrollTop = 0;
@@ -24878,7 +24879,7 @@ if (!(window.console && console.log)) {
 			    this.withdrawPost(newState, 2);
 
 			    // Clean 2 posts.
-			    if (newState.length > 7) {
+			    if (newState.length > 8) {
 				this.cleanPost(newState, 2);
 				this.replaceState({posts: newState});
 				window.scroll(0, $lastPost.offset().top - $(window).height());
@@ -24899,7 +24900,7 @@ if (!(window.console && console.log)) {
 			if (secondPostBottom >= docViewTop) {
 			    var newState = arrayCopy(this.state.posts);
 			    this.uncleanPost(newState, 2);
-			    if (newState.length > 7) {
+			    if (newState.length > 8) {
 				this.depositPost(newState, 2);
 				this.replaceState({posts: newState});
 				window.scroll(0, $secondPost.offset().top + $secondPost.height());
