@@ -24726,6 +24726,17 @@ if (!(window.console && console.log)) {
     function decode(phrase) {
 	return phrase.replace(/&amp;/g, '&');
     }
+
+    function arrayCopy(array) {
+	return array.map(function(element) {
+	    return element;
+	});
+    }
+
+    function hoursElapsed(redditTime) {
+	return Math.round(((new Date()).getTime() / 1000 - redditTime) / 3600);
+    }
+    
     var ajaxActive = false;
     var converter = new Showdown.converter();
     var PostBox = React.createClass({
@@ -24735,17 +24746,29 @@ if (!(window.console && console.log)) {
 	},
 	postBank: [],
 	cleanedPosts: [],
-	withdrawPost: function(numPosts) {
-	    var newPosts = [];
-	    for (var i = 0; i < numPosts && i < this.postBank.length; i++) {
-		newPosts.push(this.postBank.shift());
+	uncleanPost: function(newState, numPosts) {
+	    for (var i = 0; i < numPosts && this.cleanedPosts.length > 0; i++) {
+		newState.unshift(this.cleanedPosts.pop());
+		console.log(this.cleanedPosts.length);
 	    }
-	    this.setState({posts: this.state.posts.concat(newPosts)});
-	    console.log(this.state.posts.length);
 	},
-	cleanPosts: function() {
-	    this.cleanedPosts.append(this.state.posts.splice(0, 30));
-	    this.forceUpdate();
+	depositPost: function(newState, numPosts) {
+	    console.log('depositing');
+	    for (var i = 0; i < numPosts && newState.length > 0; i++) {
+		this.postBank.unshift(newState.pop());
+	    }
+	},
+	withdrawPost: function(newState, numPosts) {
+	    console.log('withdrawing');
+	    for (var i = 0; i < 2 && this.postBank.length > 0; i++) {
+		newState.push(this.postBank.shift());
+	    }
+	},	
+	cleanPost: function(newState, numPosts) {
+	    for (var i = 0; i < 2 && newState.length > 0; i++) {
+		this.cleanedPosts.push(newState.shift());
+		console.log(this.cleanedPosts.length);
+	    }
 	},
 	requestParams: {limit: 100, count: 0},
 	loadPosts: function() {
@@ -24764,7 +24787,9 @@ if (!(window.console && console.log)) {
 			}
 		    }.bind(this));
 		    if (this.state.posts.length == 0) {
-			this.withdrawPost(5);
+			var newState = arrayCopy(this.state.posts);
+			this.withdrawPost(newState, 5);
+			this.setState({posts: newState});
 		    }
 		    this.requestParams.count += 100;
 		    ajaxActive = false;
@@ -24775,32 +24800,63 @@ if (!(window.console && console.log)) {
 	    this.loadPosts();
 	    var lastScrollTop = 0;
 	    $(window).on('scroll', function() {
+		// If scrolling down
 		if ($(window).scrollTop() > lastScrollTop) {
 		    if (!ajaxActive) {
 			var $lastPost = $('.post').last().prev();
 			var docViewBottom = $(window).scrollTop() + $(window).height();
 			var lastPostTop = $lastPost.offset().top;
+
+			// If top of second last post scrolled into view
 			if (lastPostTop <= docViewBottom) {
 			    if (this.postBank.length < 20) {
 				this.loadPosts();
 			    }
-			    var newPosts = [];
-			    this.withdrawPost(2);
-			    if (this.state.posts.length - 30 > 10) {
-				this.cleanPosts();
+
+			    var newState = arrayCopy(this.state.posts);
+			    
+			    // Withdraw 2 posts.
+			    this.withdrawPost(newState, 2);
+
+			    // Clean 2 posts.
+			    if (newState.length > 11) {
+				this.cleanPost(newState, 2);
+				this.setState({posts: newState});
 				window.scrollTo(0, $lastPost.offset().top - $(window).height());
+			    } else {
+				this.setState({posts: newState});
 			    }
 			}
 		    }		    
-		} else {
-		    
 		}
+		// If scrolling up
+		else {
+		    if (!ajaxActive) {
+			var $secondPost = $('.post').first().next();
+			var docViewTop = $(window).scrollTop();
+			var secondPostBottom = $secondPost.offset().top + $secondPost.height();
+			// If bottom of second post scrolled into view
+			if (secondPostBottom >= docViewTop) {
+			    var newState = arrayCopy(this.state.posts);
+			    this.uncleanPost(newState, 2);
+			    if (newState.length > 11) {
+				this.depositPost(newState, 2);
+				this.setState({posts: newState});
+				window.scrollTo(0, $secondPost.offset().top + $secondPost.height());
+			    } else {
+				this.setState({posts: newState});
+			    }
+			}
+		    }
+		}
+
+		// Update lastScrollTop
 		lastScrollTop = $(window).scrollTop();
 	    }.bind(this));
 	},
 	render: function() {
 	    var postNodes = this.state.posts.map(function(post) {
-		return Post({key: post.data.name, url: post.data.url, title: decode(post.data.title), comments: 'http://www.reddit.com' + post.data.permalink + '.json'});
+		return Post({key: post.data.name, url: post.data.url, title: decode(post.data.title), subreddit: post.data.subreddit, domain: post.data.domain, author: post.data.author, time: hoursElapsed(post.data.created_utc), comments: 'http://www.reddit.com' + post.data.permalink + '.json'});
 	    });
 	    return React.DOM.div({className: 'postbox'}, postNodes);
 	}
@@ -24811,7 +24867,7 @@ if (!(window.console && console.log)) {
 	displayName: 'CommentBox',
 	componentDidUpdate: function() {
 	    if (this.props.showComments) {
-		TweenLite.to(this.getDOMNode(), 0.5, {height: 'auto'});
+		TweenLite.to(this.getDOMNode(), 0.5, {height: '500'});
 	    } else {
 		TweenLite.to(this.getDOMNode(), 0.5, {height: 0});
 	    }
@@ -24820,13 +24876,13 @@ if (!(window.console && console.log)) {
 	constructCommentTree: function() {
 	    var commentNodes = [];
 	    // Iterate through top 
-	    for (var i = 0; i < 5 && i < this.props.comments.length; i++) {
+	    for (var i = 0; i < 10 && i < this.props.comments.length; i++) {
 		var node = Comment({
 		    className: 'level1',
 		    text: this.props.comments[i].data.body,
 		    author: this.props.comments[i].data.author,
 		    votes: this.props.comments[i].data.ups,
-		    time: Math.round(((new Date()).getTime() / 1000 - this.props.comments[i].data.created_utc) / 3600)
+		    time: hoursElapsed(this.props.comments[i].data.created_utc)
 		},			 
 				   this.props.comments[i].data.body);
 		commentNodes.push(node);
@@ -24862,6 +24918,18 @@ if (!(window.console && console.log)) {
 	render: function() {
 	    var contents = [];
 	    contents.push(React.DOM.h2(null, this.props.title));
+	    contents.push(React.DOM.div({className: 'info'},
+					React.DOM.a({className: 'subreddit',
+						     href: 'http://reddit.com/r/' + this.props.subreddit,
+						     target: '_blank'
+						    }, '/r/' + this.props.subreddit),
+					React.DOM.span({className: 'time'}, this.props.time + ' hours'),
+					React.DOM.a({className: 'uploader',
+						     href: 'http://reddit.com/u/' + this.props.author,
+						     target: '_blank'
+						    }, this.props.author)
+				       )
+			 );
 	    contents.push(React.DOM.a({href: this.props.url, target: '_blank'},
 				      React.DOM.img({src: this.props.url}))
 			 );
@@ -24883,7 +24951,7 @@ if (!(window.console && console.log)) {
 	loadCommentsFromServer: function() {
 	    this.setState({loadingComments: true});
 	    $.ajax({
-		url: this.props.comments + '?jsonp=?',
+		url: this.props.comments + '?sort=hot&jsonp=?',
 		type: 'GET',
 		dataType: 'jsonp',
 		success: function(response) {
@@ -24893,6 +24961,12 @@ if (!(window.console && console.log)) {
 			loadingComments: false
 		    });
 		    
+		}.bind(this),
+		error: function() {
+		    this.setState({
+			showComments: false,
+			loadingComments: false
+		    });
 		}.bind(this)
 	    });	    
 	},
@@ -24908,5 +24982,5 @@ if (!(window.console && console.log)) {
 	    }
 	}
     });
-    React.renderComponent(PostBox(), document.getElementById('content'));
+    React.renderComponent(PostBox({sub: ''}), document.getElementById('content'));
 })();
