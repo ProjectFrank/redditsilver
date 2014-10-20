@@ -24893,7 +24893,6 @@ if (!(window.console && console.log)) {
 		else {
 		    var $secondPost;
 		    if (($secondPost = $('.post').first().next()).length > 0) {
-			var $secondPost = $('.post').first().next();
 			var docViewTop = $(window).scrollTop();
 			var secondPostBottom = $secondPost.offset().top + $secondPost.height();
 			// If bottom of second post scrolled into view
