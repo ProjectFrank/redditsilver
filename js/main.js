@@ -24749,17 +24749,14 @@ if (!(window.console && console.log)) {
 	uncleanPost: function(newState, numPosts) {
 	    for (var i = 0; i < numPosts && this.cleanedPosts.length > 0; i++) {
 		newState.unshift(this.cleanedPosts.pop());
-		console.log(this.cleanedPosts.length);
 	    }
 	},
 	depositPost: function(newState, numPosts) {
-	    console.log('depositing');
 	    for (var i = 0; i < numPosts && newState.length > 0; i++) {
 		this.postBank.unshift(newState.pop());
 	    }
 	},
 	withdrawPost: function(newState, numPosts) {
-	    console.log('withdrawing');
 	    for (var i = 0; i < 2 && this.postBank.length > 0; i++) {
 		newState.push(this.postBank.shift());
 	    }
@@ -24767,7 +24764,6 @@ if (!(window.console && console.log)) {
 	cleanPost: function(newState, numPosts) {
 	    for (var i = 0; i < 2 && newState.length > 0; i++) {
 		this.cleanedPosts.push(newState.shift());
-		console.log(this.cleanedPosts.length);
 	    }
 	},
 	requestParams: {limit: 100, count: 0},
@@ -24904,7 +24900,7 @@ if (!(window.console && console.log)) {
 	    if (this.props.votes) {
 		contents.push(React.DOM.span({className: 'votes'}, this.props.votes + ' points'));
 	    }
-	    contents.push(React.DOM.span({className: 'hours'}, this.props.time + ' hours'));
+	    contents.push(React.DOM.span({className: 'hours'}, this.props.time + 'h'));
 	    contents.push(React.DOM.div({dangerouslySetInnerHTML: {__html: rawMarkup}}));
 	    return React.DOM.div({className: 'comment'}, contents);
 	}
@@ -24917,20 +24913,20 @@ if (!(window.console && console.log)) {
 	displayName: 'Post',
 	render: function() {
 	    var contents = [];
-	    contents.push(React.DOM.h2(null, this.props.title));
-	    contents.push(React.DOM.div({className: 'info'},
+	    contents.push(React.DOM.h2({key: this.props.key + 0}, this.props.title));
+	    contents.push(React.DOM.div({key: this.props.key + 1, className: 'info clearfix'},
 					React.DOM.a({className: 'subreddit',
 						     href: 'http://reddit.com/r/' + this.props.subreddit,
 						     target: '_blank'
 						    }, '/r/' + this.props.subreddit),
-					React.DOM.span({className: 'time'}, this.props.time + ' hours'),
+					React.DOM.span({className: 'time'}, this.props.time + 'h'),
 					React.DOM.a({className: 'uploader',
 						     href: 'http://reddit.com/u/' + this.props.author,
 						     target: '_blank'
-						    }, this.props.author)
+						    }, '/u/' + this.props.author)
 				       )
 			 );
-	    contents.push(React.DOM.a({href: this.props.url, target: '_blank'},
+	    contents.push(React.DOM.a({key: this.props.key + 2, href: this.props.url, target: '_blank'},
 				      React.DOM.img({src: this.props.url}))
 			 );
 	    var commentToggle = 'show comments';
@@ -24938,9 +24934,9 @@ if (!(window.console && console.log)) {
 		commentToggle = 'hide comments';
 	    }
 	    if (!this.state.loadingComments) {
-		contents.push(React.DOM.a({onClick: this.handleClick, ref: 'CommentToggle'}, commentToggle));	
+		contents.push(React.DOM.a({key: this.props.key + 3, className: 'comment-toggle', onClick: this.handleClick, ref: 'CommentToggle'}, commentToggle));	
 	    } else {
-		contents.push(React.DOM.a({ref: 'CommentToggle'},
+		contents.push(React.DOM.a({key: this.props.key + 4, className: 'comment-toggle', ref: 'CommentToggle'},
 					  commentToggle,
 					  React.DOM.div({className: 'loader', dangerouslySetInnerHTML: {__html: '<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml"attributeName="transform"type="rotate"from="0 25 25"to="360 25 25"dur="0.6s"repeatCount="indefinite"/></path></svg>'}})));				
 	    }
