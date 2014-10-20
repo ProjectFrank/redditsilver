@@ -24842,15 +24842,15 @@ if (!(window.console && console.log)) {
 			if (post.data.url.search(regexp) > 0 && !post.data.over_18) {
 			    var newPost = Post({key: post.data.name, url: post.data.url, title: decode(post.data.title), subreddit: post.data.subreddit, domain: post.data.domain, author: post.data.author, time: hoursElapsed(post.data.created_utc), comments: 'http://www.reddit.com' + post.data.permalink + '.json'});
 			    this.postBank.push(newPost);
+			    this.requestParams.after = post.data.name;
 			}
 		    }.bind(this));
 		    if (this.state.posts.length == 0) {
 			var newState = arrayCopy(this.state.posts);
 			this.withdrawPost(newState, 5);
-			this.setState({posts: newState});
+			this.replaceState({posts: newState});
 		    }
 		    this.requestParams.count += 100;
-		    this.requestParams.after = response.data.children[99].data.name;
 		    ajaxActive = false;
 		}.bind(this)
 	    });
@@ -24878,12 +24878,12 @@ if (!(window.console && console.log)) {
 			    this.withdrawPost(newState, 2);
 
 			    // Clean 2 posts.
-			    if (newState.length > 6) {
+			    if (newState.length > 7) {
 				this.cleanPost(newState, 2);
-				this.setState({posts: newState});
+				this.replaceState({posts: newState});
 				window.scroll(0, $lastPost.offset().top - $(window).height());
 			    } else {
-				this.setState({posts: newState});
+				this.replaceState({posts: newState});
 			    }
 			}
 		    }		    
@@ -24899,12 +24899,12 @@ if (!(window.console && console.log)) {
 			if (secondPostBottom >= docViewTop) {
 			    var newState = arrayCopy(this.state.posts);
 			    this.uncleanPost(newState, 2);
-			    if (newState.length > 6) {
+			    if (newState.length > 7) {
 				this.depositPost(newState, 2);
-				this.setState({posts: newState});
+				this.replaceState({posts: newState});
 				window.scroll(0, $secondPost.offset().top + $secondPost.height());
 			    } else {
-				this.setState({posts: newState});
+				this.replaceState({posts: newState});
 			    }
 			}
 		    }
