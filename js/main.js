@@ -24863,9 +24863,9 @@ if (!(window.console && console.log)) {
 	displayName: 'CommentBox',
 	componentDidUpdate: function() {
 	    if (this.props.showComments) {
-		TweenLite.to(this.getDOMNode(), 0.5, {height: '500'});
+		TweenLite.to(this.getDOMNode(), 1, {height: '500', ease: Bounce.easeOut});
 	    } else {
-		TweenLite.to(this.getDOMNode(), 0.5, {height: 0});
+		TweenLite.to(this.getDOMNode(), 1, {height: 0, ease: Bounce.easeOut});
 	    }
 	},
 	// Create comment nodes for top 5 comments at each level for 3 levels
