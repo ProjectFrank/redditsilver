@@ -24875,13 +24875,13 @@ if (!(window.console && console.log)) {
 			    var newState = arrayCopy(this.state.posts);
 			    
 			    // Withdraw 2 posts.
-			    this.withdrawPost(newState, 1);
+			    this.withdrawPost(newState, 2);
 
 			    // Clean 2 posts.
 			    if (newState.length > 6) {
-				this.cleanPost(newState, 1);
+				this.cleanPost(newState, 2);
 				this.setState({posts: newState});
-				window.scrollTo(0, $lastPost.offset().top - $(window).height());
+				window.scroll(0, $lastPost.offset().top - $(window).height());
 			    } else {
 				this.setState({posts: newState});
 			    }
@@ -24898,11 +24898,11 @@ if (!(window.console && console.log)) {
 			// If bottom of second post scrolled into view
 			if (secondPostBottom >= docViewTop) {
 			    var newState = arrayCopy(this.state.posts);
-			    this.uncleanPost(newState, 1);
+			    this.uncleanPost(newState, 2);
 			    if (newState.length > 6) {
-				this.depositPost(newState, 1);
+				this.depositPost(newState, 2);
 				this.setState({posts: newState});
-				window.scrollTo(0, $secondPost.offset().top + $secondPost.height());
+				window.scroll(0, $secondPost.offset().top + $secondPost.height());
 			    } else {
 				this.setState({posts: newState});
 			    }
@@ -24936,6 +24936,7 @@ if (!(window.console && console.log)) {
 	    for (var i = 0; i < 10 && i < this.props.comments.length; i++) {
 		var node = Comment({
 		    className: 'level1',
+		    key: this.props.comments[i].id,
 		    text: this.props.comments[i].data.body,
 		    author: this.props.comments[i].data.author,
 		    votes: this.props.comments[i].data.ups,
