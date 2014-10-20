@@ -10,38 +10,47 @@ body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+#content {
+    margin: 0 auto;
+    width: 95%;
+    max-width: 600px;
+}
+
 img {
     max-width: 100%;
     height: auto;
 }
 
 a {
-    color: inherit;
+    color: #999;
     text-decoration: none;
+    cursor: pointer;
     &:active {
-	color: #00f;
+	color: #ff3c1f;
     }
     &:hover {
-	color: #00f;
+	color: #ff3c1f;
     }
 }
 
 h2 {
     font-size: 3rem;
+    margin-bottom: 0;
+    text-align: left;
 }
 
 header {
     text-align: center;
-    margin-bottom: 15rem;
-    p {
-	font-size: 2rem;
+    margin-bottom: 5rem;
+    img {
+	width: 80%;
+	max-width: 400px;
     }
 }
 
 .postbox {
     margin: 0 auto;
     width: 100%;
-    max-width: 600px;
 }
 
 .post {
@@ -49,17 +58,46 @@ header {
     margin-bottom: 50px;
     border-bottom: 1px solid black;
     font-size: 1.6rem;
-    img {
+    text-align: center;
+    img, video {
 	width: 100%;
+	margin-bottom: 1rem;
     }
 }
 
+.loader {
+    display: inline;
+    position: absolute;
+    left: 100%;
+    svg {
+	display: inline;
+	position: relative;
+	top: 0.2rem;
+	height: 1.6rem;
+	path {
+	    fill: rgb(255,60,31);
+	}
+    }
+}
+
+.comment-toggle {
+    position: relative;
+    display: inline;
+}
+
 .commentbox {
-    overflow: hidden;
+    text-align: left;
+    overflow: scroll;
+    width: 90%;
+    margin: 1rem auto 0 auto;
+    background: #fff8f8;
 }
 
 .comment {
+    position: relative;
     margin: 1em 0;
+    padding-bottom: 1rem;
+    max-width: 100%;
     .author {
 	float: left;
 	margin-right: 2em;
@@ -72,5 +110,45 @@ header {
     }
     div {
 	clear: both;
+	padding-top: 1rem;
+	p {
+	    margin-top: 0;
+	    margin-bottom: 1rem;
+	    line-height: 1.4;
+	}
+	a {
+	    text-decoration: underline;
+	}
+    }
+}
+
+.info {
+    position: relative;
+    text-align: center;
+    margin-bottom: 2rem;
+    .subreddit {
+	position: absolute;
+	top: 0;
+	left: 0;
+    }
+
+    .time {
+	position: absolute;
+	top: 0;
+	right: 0;
+    }
+    @media (max-width: 500px) {
+	.subreddit {
+	    position: static;
+	    display: block;
+	    text-align: left;
+	}
+	.time {
+	    position: static;
+	    float: right;
+	}
+	.uploader {
+	    float: left;
+	}
     }
 }
