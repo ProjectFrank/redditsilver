@@ -7,7 +7,8 @@ html {
 }
 
 body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
 }
 
 #content {
@@ -37,6 +38,8 @@ h2 {
     font-size: 3rem;
     margin-bottom: 0;
     text-align: left;
+    font-family: 'Junction';
+    font-weight: 400;
 }
 
 header {
@@ -91,6 +94,7 @@ header {
     width: 90%;
     margin: 1rem auto 0 auto;
     background: #fff8f8;
+    font-weight: 300;
 }
 
 .comment {
@@ -104,13 +108,18 @@ header {
     }
     .votes {
 	float: left;
+	font-family: 'Open Sans Condensed';
     }
     .hours {
 	float: right;
+	font-family: 'Open Sans Condensed';
     }
     div {
 	clear: both;
 	padding-top: 1rem;
+	strong {
+	    font-weight: 600;
+	}
 	p {
 	    margin-top: 0;
 	    margin-bottom: 1rem;
@@ -126,6 +135,8 @@ header {
     position: relative;
     text-align: center;
     margin-bottom: 2rem;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 2rem;
     .subreddit {
 	position: absolute;
 	top: 0;
