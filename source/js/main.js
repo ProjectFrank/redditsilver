@@ -7,9 +7,7 @@
     }
 
     function arrayCopy(array) {
-	return array.map(function(element) {
-	    return element;
-	});
+	return array.slice();
     }
 
     function hoursElapsed(redditTime) {
