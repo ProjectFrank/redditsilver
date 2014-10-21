@@ -49,7 +49,7 @@
 	loadPosts: function() {
 	    ajaxActive = true;
 	    $.ajax({
-		url: 'http://www.reddit.com/.json?jsonp=?',
+		url: 'http://www.reddit.com/user/redditsilverwebapp/m/redditsilver/.json?jsonp=?',
 		type: 'GET',
 		dataType: 'jsonp',
 		data: this.requestParams,
