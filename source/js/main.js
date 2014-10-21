@@ -1,5 +1,6 @@
 //= require_tree "./vendor"
 //= require "plugins"
+//= require "ratelimiter"
 
 (function() {    
     function decode(phrase) {
@@ -73,7 +74,7 @@
 	componentDidMount: function() {
 	    this.loadPosts();
 	    var lastScrollTop = 0;
-	    $(window).on('scroll', function() {
+	    $(window).on('scroll', RateLimiter.throttle({delay:20, no_trailing: true}, function() {
 		// If scrolling down
 		if ($(window).scrollTop() > lastScrollTop) {
 		    var $lastPost;
@@ -93,7 +94,7 @@
 			    this.withdrawPost(newState, 2);
 
 			    // Clean 2 posts.
-			    if (newState.length > 7) {
+			    if (newState.length > 8) {
 				this.cleanPost(newState, 2);
 				this.replaceState({posts: newState});
 				window.scroll(0, $lastPost.offset().top - $(window).height());
@@ -107,14 +108,13 @@
 		else {
 		    var $secondPost;
 		    if (($secondPost = $('.post').first().next()).length > 0) {
-			var $secondPost = $('.post').first().next();
 			var docViewTop = $(window).scrollTop();
 			var secondPostBottom = $secondPost.offset().top + $secondPost.height();
 			// If bottom of second post scrolled into view
 			if (secondPostBottom >= docViewTop) {
 			    var newState = arrayCopy(this.state.posts);
 			    this.uncleanPost(newState, 2);
-			    if (newState.length > 7) {
+			    if (newState.length > 8) {
 				this.depositPost(newState, 2);
 				this.replaceState({posts: newState});
 				window.scroll(0, $secondPost.offset().top + $secondPost.height());
@@ -127,7 +127,7 @@
 
 		// Update lastScrollTop
 		lastScrollTop = $(window).scrollTop();
-	    }.bind(this));
+	    }.bind(this)));
 	},
 	render: function() {
 	    return React.DOM.div({className: 'postbox'}, this.state.posts);
