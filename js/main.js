@@ -24785,14 +24785,73 @@ if (!(window.console && console.log)) {
 
 
 (function() {    
+    var RateLimit = {
+	throttle: function(rawParams, func) {
+	    var defaults = {delay: 200, no_trailing: false};
+	    var params = $.extend(defaults, rawParams);    
+	    var timer;
+	    // If no_trailing false or unspecified
+	    if (!params.no_trailing) {
+		return function() {
+		    var args = arguments;
+		    debounce({delay: params.delay, at_begin: true}, function() {
+			func.apply(this, args);
+		    })();
+		    
+		    if (!timer) {
+			timer = window.setTimeout(function() {
+			    timer = null;
+			    func.apply(this, args);
+			}.bind(this), params.delay);
+		    }
+		}
+	    }
+
+	    // If no_trailing set to true
+	    return function() {
+		var args = arguments;
+		if (!timer) {
+		    func.apply(this, args);
+		    timer = window.setTimeout(function() {
+			timer = null;
+		    }.bind(this), params.delay);
+		}
+	    }
+	},
+
+	debounce: function(rawParams, func) {
+	    var defaults = {delay: 200, at_begin: false};
+	    var params = $.extend(defaults, rawParams);
+	    var timer;
+	    if (!at_begin) {
+		return function() {
+		    window.clearTimeout(timer);
+		    var args = arguments;
+		    timer = window.setTimeout(function() {
+			func.apply(this, args);
+		    }.bind(this), params.delay);
+		};
+	    }
+
+	    return function() {
+		if (!timer) {
+		    func.apply(this, arguments);
+		    timer = window.setTimeout(function() {
+			timer = null;
+		    });
+		} else {
+		    window.clearTimeout(timer);
+		}
+	    };
+	}
+    }
+
     function decode(phrase) {
 	return phrase.replace(/&amp;/g, '&');
     }
 
     function arrayCopy(array) {
-	return array.map(function(element) {
-	    return element;
-	});
+	return array.slice();
     }
 
     function hoursElapsed(redditTime) {
@@ -24859,7 +24918,7 @@ if (!(window.console && console.log)) {
 	componentDidMount: function() {
 	    this.loadPosts();
 	    var lastScrollTop = 0;
-	    $(window).on('scroll', function() {
+	    $(window).on('scroll', RateLimit.throttle({delay:25, no_trailing: true}, function() {
 		// If scrolling down
 		if ($(window).scrollTop() > lastScrollTop) {
 		    var $lastPost;
@@ -24912,7 +24971,7 @@ if (!(window.console && console.log)) {
 
 		// Update lastScrollTop
 		lastScrollTop = $(window).scrollTop();
-	    }.bind(this));
+	    }.bind(this)));
 	},
 	render: function() {
 	    return React.DOM.div({className: 'postbox'}, this.state.posts);
