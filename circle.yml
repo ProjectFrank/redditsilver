@@ -1,0 +1,3 @@
+test:
+  override:
+    - cat build/index.html
