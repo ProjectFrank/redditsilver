@@ -1,7 +1,3 @@
-machine:
-  services:
-    - neo4j
-
-test:
+compile:
   override:
-    - cat build/index.html
+    - echo "NO COMPILE"
